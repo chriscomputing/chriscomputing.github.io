@@ -1,3 +1,17 @@
 baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+languageCode = 'de-de'
+title = ''
+
+# --- Theme Options --- #
+theme = "hugo-bearcub"
+copyright= "chriscomputing (CC BY-NC-SA 4.0)"
+defaultContentLanguage = "de"
+enableRobotsTXT = true  # Für die coole SEO
+
+# Theme Language Setup
+[languages]
+    [languages.de]
+    title = "Blog von chriscomputing"
+    languageName = "Deutsch"
+    [languages.de.params]
+        madeWith = "Gemacht mit [Bear Cub](https://github.com/clente/hugo-bearcub)"
