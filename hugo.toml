@@ -1,5 +1,4 @@
-baseURL = 'https://example.org/'
-languageCode = 'de-de'
+baseURL = 'https://chriscomputing.de/'
 title = ''
 
 # --- Theme Options --- #
@@ -8,10 +7,39 @@ copyright= "chriscomputing (CC BY-NC-SA 4.0)"
 defaultContentLanguage = "de"
 enableRobotsTXT = true  # Für die coole SEO
 
+# Markup Setup
+[markup]
+    [markup.highlight]
+    lineNos = true
+    lineNumbersInTable = false
+    # This allows Bear Cub to use a variation of Dracula that is more accessible
+    # to people with poor eyesight. For more information about color contrast
+    # and accessibility, see https://web.dev/color-and-contrast-accessibility/
+    noClasses = false
+
 # Theme Language Setup
 [languages]
     [languages.de]
     title = "Blog von chriscomputing"
-    languageName = "Deutsch"
+    languageName = "Deutsch 🇩🇪"
+    languageCode = 'de-DE'
+    contentDir = "content"
     [languages.de.params]
         madeWith = "Gemacht mit [Bear Cub](https://github.com/clente/hugo-bearcub)"
+        dateFormat = "02.01.2006"
+
+    [languages.en]
+    title = "Blog from chriscomputing"
+    languageName = "English 🇬🇧"
+    languageCode = 'en-EN'
+    contentDir = "content.en"
+    [languages.en.params]
+        madeWith = "Made with [Bear Cub](https://github.com/clente/hugo-bearcub)"
+        dateFormat = "2006-01-02"
+
+# Theme parameters
+[params]
+    hideUntranslated = false
+
+    [params.author]
+        name = "chriscomputing"
