@@ -1,4 +1,4 @@
-baseURL = 'https://chriscomputing.de/'
+baseURL = 'https://blog.chriscomputing.de/'
 title = ''
 
 # --- Theme Options --- #
@@ -27,7 +27,7 @@ enableRobotsTXT = true  # Für die coole SEO
     [languages.de.params]
         madeWith = "Gemacht mit [Bear Cub](https://github.com/clente/hugo-bearcub)"
         dateFormat = "02.01.2006"
-        privacyNotice = "[Datenschutzerklärung](https://chriscomputing.de/datenschutz/)"
+        privacyNotice = "[Datenschutzerklärung](https://blog.chriscomputing.de/datenschutz/)"
 
     [languages.en]
     title = "Blog from chriscomputing"
@@ -37,7 +37,7 @@ enableRobotsTXT = true  # Für die coole SEO
     [languages.en.params]
         madeWith = "Made with [Bear Cub](https://github.com/clente/hugo-bearcub)"
         dateFormat = "2006-01-02"
-        privacyNotice = "[Privacy Notice](https://chriscomputing.de/en/privacynotice)"
+        privacyNotice = "[Privacy Notice](https://blog.chriscomputing.de/en/privacynotice)"
 
 # Theme parameters
 [params]
