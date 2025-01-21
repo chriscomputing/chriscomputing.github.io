@@ -1,9 +1,10 @@
 +++
-title = 'Datenschutz'
-date = 2025-01-14
+title = "Datenschutzerklärung"
+date = 2025-01-21
 draft = false
 +++
 
+## Hosting
 Unser Hoster erhebt in sog. Logfiles folgende Daten, die Ihr Browser übermittelt:
 
 IP-Adresse, die Adresse der vorher besuchten Website (Referer Anfrage-Header), Datum und Uhrzeit der Anfrage, Zeitzonendifferenz zur Greenwich Mean Time, Inhalt der Anforderung, HTTP-Statuscode, übertragene Datenmenge, Website, von der die Anforderung kommt und Informationen zu Browser und Betriebssystem.

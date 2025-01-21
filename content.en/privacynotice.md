@@ -1,9 +1,10 @@
 +++
-title = 'Privacy Notice'
-date = 2025-01-14
+title = "Privacynotice"
+date = 2025-01-21
 draft = false
 +++
 
+## Hosting
 Our hosting provider collects the following data in so-called log files, which your browser transmits:
 
 IP address, the address of the previously visited website (referrer request header), date and time of the request, time zone difference to Greenwich Mean Time, content of the request, HTTP status code, data volume transferred, website from which the request originated, and information about the browser and operating system.
