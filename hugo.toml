@@ -17,6 +17,14 @@ enableRobotsTXT = true  # Für die coole SEO
     # and accessibility, see https://web.dev/color-and-contrast-accessibility/
     noClasses = false
 
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['$$', '$$']]
+          inline = [['$', '$']]
+
 # Theme Language Setup
 [languages]
     [languages.de]
@@ -42,6 +50,7 @@ enableRobotsTXT = true  # Für die coole SEO
 # Theme parameters
 [params]
     hideUntranslated = false
+    math = true
 
     [params.author]
         name = "chriscomputing"
