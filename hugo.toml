@@ -50,7 +50,7 @@ enableRobotsTXT = true  # Für die coole SEO
 # Theme parameters
 [params]
     hideUntranslated = false
-    math = true
+    math = false
 
     [params.author]
         name = "chriscomputing"
