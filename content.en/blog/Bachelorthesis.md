@@ -1,0 +1,34 @@
++++
+title = "Transferability of benchmark results to real scientific applications"
+date = 2025-10-04
+draft = false
+math = false
++++
+I recently finished writing my Bachelor's thesis, which is titled 'Transferability of Benchmark Results to Real Scientific Applications'. In this blog post, I aim to share the most important results. As well as accessing my university's resources, I also had the privilege of using my employer's resources. This gave me access not only to my university's HPC cluster, but also to the two clusters owned by my employer. Having access to three different clusters is a rare opportunity, particularly for a bachelor's thesis. I am very grateful for this opportunity.  
+
+However, this puts me at a disadvantage: I cannot share the data acquired during my thesis, nor can I reveal details about the clusters or the software used. Along with my desire to remain anonymous, this means I can only summarise the key points of my thesis.
+
+## Introduction
+
+Benchmarks are widely used to measure the performance of computer systems, including both common notebooks and large HPC clusters. Both manufacturers developing new technology and potential buyers of said technology have a strong interest in accurately estimating its performance. However, the most commonly used benchmarks are not without criticism. The [HPL benchmark](https://www.netlib.org/benchmark/hpl/), used in the prestigious [Top500](http://top500.org/) ranking of the fastest supercomputers in the world, receives criticism for its lack of transferability into real world performance. HPL aims to achieve the highest possible [FLOP/s](https://en.wikipedia.org/wiki/Floating_point_operations_per_second) by minimising communication between processes and reducing the amount of memory access required. However, neither of these is representative of real scientific applications (hereafter referred to as "applications"). These measures enable HPL to scale much better than most applications with high node counts. Application benchmarks have emerged as an alternative. They typically encapsulate codes used in real scientific applications, making them usable as a benchmark. In theory, this allows the performance of HPC clusters to be predicted more accurately. The [NAS Parallel Benchmarks](https://www.nas.nasa.gov/software/npb.html) (NPB for short) are well-known examples of application benchmarks. The NPB is a suite of benchmarks stemming from the field of CFD. Although they are application benchmarks, they have been highly optimised for their specific problem. This calls into question their ability to accurately predict application performance.
+
+## Implementation
+
+The tests were performed using four benchmarks and two applications. To examine the scaling behaviour, the tests were conducted in four scenarios:
+
+1. On a node with one CPU, so that communication only took place on that CPU.
+2. On a node with two CPUs, enabling communication on the CPU interconnect.
+3. On four nodes, each with two CPUs, to use the node interconnect.
+4. Test behaviour in massively parallel environments with 64 nodes and 128 CPUs, where communication and parallelisability play a very important role.
+
+The results of the four benchmarks were used to predict the computing power of the two applications. Additionally, the benchmark results themselves revealed interesting details about the hardware used.
+
+## Benchmarks and applications
+
+Three synthetic benchmarks were used: [HPL](https://www.netlib.org/benchmark/hpl/), [STREAM](https://www.cs.virginia.edu/stream/ref.html) and four benchmarks from the [OSU Microbenchmark Suite](<https://mvapich.cse>. ohio-state.edu/benchmarks/): allreduce, alltoall, bibw and latency. Allreduce and Alltoall are MPI routines. The benchmarks measure the time required to execute them. Bibw and Latency use MPI routines to measure bidirectional bandwidth and latency between two nodes, respectively. STREAM is a benchmark that tests the RAM's bandwidth. On modern clusters, the runtime of a programme is no longer determined by CPU performance, but by how quickly data can reach the CPU. Although caches are a very important technology, ultimately very few problems fit into an application's cache. Therefore, RAM bandwidth is becoming increasingly important. The fourth benchmark used is the [NPB Suite] (<https://www.nas.nasa.gov/software/npb.html>). As with the OSU microbenchmarks, several benchmarks from the collection were used: the Conjugate Gradient (CG), Multigrid (MG) and Fourier Transformation (FT) benchmarks, for example. Conjugate gradient and multigrid are both methods for solving linear systems of equations; multigrid methods often use a conjugate gradient method.  
+NWChem, an open-source chemistry project, was selected for the applications. The other application is proprietary, so I cannot reveal any further details here. NWChem was used to perform a DFT analysis of the C28 molecule. DFT calculates the distribution of electrons in a molecule. C28 is formed when 28 carbon atoms bond together. A limitation of NWChem is that DFT analyses are calculated using Gaussian basis sets, which are less amenable to parallel processing than other methods.
+
+## Results
+
+The tests have shown that benchmark results can only predict computing power in applications to a limited extent. In particular, several benchmarks must be used, rather than relying on a single one. Which combination of benchmarks yields the most meaningful results depends on the application whose computing power is to be predicted. For CPU-intensive applications, for instance, the STREAM result is less relevant than for applications that process large amounts of data. Furthermore, despite its widespread use, it has been demonstrated that the HPL benchmark is not particularly effective in estimating the computing power of clusters under real-world conditions. HPL achieves much higher FLOP/s and scales much better than applications, especially across multiple nodes. Furthermore, the relative differences between clusters in HPL do not necessarily reflect the relative differences in real applications, as the differences in HPL are sometimes significantly smaller. This is because most technological advances in CPUs lie not in the raw computing power of their cores, but in the size and speed of the cache, a factor that HPL hardly takes into account.  
+Moreover, tests show that even the application-oriented benchmarks of the NBP Suite are significantly better optimised than available applications. A 22-fold [speedup](https://hpc-wiki.info/hpc/Scaling) was even achieved on a cluster with 8 CPUs. The applications were far from achieving this, although under certain circumstances, a small superlinear speedup could be observed for them. It is therefore clear that benchmark results only apply to real scientific applications to a limited extent.
