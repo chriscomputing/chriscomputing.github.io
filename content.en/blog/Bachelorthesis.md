@@ -1,0 +1,13 @@
++++
+title = "Transferability of benchmark results to real scientific applications"
+date = 2025-10-04
+draft = true
+math = false
++++
+I recently finished writing my Bachelor's thesis, which is titled 'Transferability of Benchmark Results to Real Scientific Applications'. In this blog post, I aim to share the most important results. As well as accessing my university's resources, I also had the privilege of using my employer's resources. This gave me access not only to my university's HPC cluster, but also to the two clusters owned by my employer. Having access to three different clusters is a rare opportunity, particularly for a bachelor's thesis. I am very grateful for this opportunity.  
+
+However, this puts me at a disadvantage: I cannot share the data acquired during my thesis, nor can I reveal details about the clusters or the software used. Along with my desire to remain anonymous, this means I can only summarise the key points of my thesis.
+
+## Introduction
+
+Benchmarks are widely used to measure the performance of computer systems, including both common notebooks and large HPC clusters. Both manufacturers developing new technology and potential buyers of said technology have a strong interest in accurately estimating its performance. However, the most commonly used benchmarks are not without criticism. The [HPL benchmark](https://www.netlib.org/benchmark/hpl/), used in the prestigious [Top500](http://top500.org/) ranking of the fastest supercomputers in the world, receives criticism for its lack of transferability into real world performance. HPL aims to achieve the highest possible [FLOP/s](https://en.wikipedia.org/wiki/Floating_point_operations_per_second) by minimising communication between processes and reducing the amount of memory access required. However, neither of these is representative of real scientific applications (hereafter referred to as "applications"). These measures enable HPL to scale much better than most applications with high node counts. Application benchmarks have emerged as an alternative. They typically encapsulate codes used in real scientific applications, making them usable as a benchmark. In theory, this allows the performance of HPC clusters to be predicted more accurately. The [NAS Parallel Benchmarks](https://www.nas.nasa.gov/software/npb.html) (NPB for short) are well-known examples of application benchmarks. The NPB is a suite of benchmarks stemming from the field of CFD. Although they are application benchmarks, they have been highly optimised for their specific problem. This calls into question their ability to accurately predict application performance.
