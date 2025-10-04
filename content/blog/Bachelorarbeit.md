@@ -1,7 +1,7 @@
 +++
 title = "Übertragbarkeit von Benchmarkergebnissen auf reale wissenschaftliche Anwendungen"
-date = 2025-10-03
-draft = true
+date = 2025-10-04
+draft = false
 math = false
 +++
 Vor kurzem habe ich meine Bachelorarbeit mit dem Titel „Übertragbarkeit von Benchmarkergebnissen auf reale wissenschaftliche Anwendungen” beendet. In diesem Beitrag möchte ich die wichtigsten Ergebnisse teilen. Ich hatte das Privileg, für meine Arbeit nicht nur auf die Ressourcen der Universität, sondern auch auf die meines Arbeitgebers zuzugreifen. Das brachte verschiedene Vorteile mit sich. Beispielsweise konnte ich Expertise von sowohl der Universität als auch meines Arbeitgebers nutzen. Außerdem hatte ich drei verschiedene HPC-Cluster zur Verfügung, auf denen ich meine Tests ausführen konnte. Zugriff auf 3 HPC-Cluster ist selten, insbesondere im Rahmen einer Bachelorarbeit. Daher bin ich den Beteiligten zu tiefem Dank verpflichtet. Jedoch hat das alles auch einen Nachteil: Ich kann nicht frei Daten direkt aus meiner Bachelorarbeit verwenden. Weder die Universität noch mein Arbeitgeber wären glücklich, wenn ich die genauen Fähigkeiten ihrer Cluster in die Welt posaunen würde. Zusammen mit meinem Wunsch, ein bisschen Anonymität zu bewahren, führt dies dazu, dass ich in diesem Blogpost nur die wichtigsten Lehren zusammenfassen und meine Bachelorarbeit paraphrasieren werde.

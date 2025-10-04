@@ -1,7 +1,7 @@
 +++
 title = "Transferability of benchmark results to real scientific applications"
 date = 2025-10-04
-draft = true
+draft = false
 math = false
 +++
 I recently finished writing my Bachelor's thesis, which is titled 'Transferability of Benchmark Results to Real Scientific Applications'. In this blog post, I aim to share the most important results. As well as accessing my university's resources, I also had the privilege of using my employer's resources. This gave me access not only to my university's HPC cluster, but also to the two clusters owned by my employer. Having access to three different clusters is a rare opportunity, particularly for a bachelor's thesis. I am very grateful for this opportunity.  
