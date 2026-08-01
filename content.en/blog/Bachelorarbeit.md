@@ -4,6 +4,10 @@ date = 2025-10-04
 draft = false
 math = false
 +++
+{{< alert type="info" title="" >}}
+This bachelor thesis has been recognized by my university as one of the best in the class of 2025.
+{{< /alert >}}
+
 I recently finished writing my Bachelor's thesis, which is titled 'Transferability of Benchmark Results to Real Scientific Applications'. In this blog post, I aim to share the most important results. As well as accessing my university's resources, I also had the privilege of using my employer's resources. This gave me access not only to my university's HPC cluster, but also to the two clusters owned by my employer. Having access to three different clusters is a rare opportunity, particularly for a bachelor's thesis. I am very grateful for this opportunity.  
 
 However, this puts me at a disadvantage: I cannot share the data acquired during my thesis, nor can I reveal details about the clusters or the software used. Along with my desire to remain anonymous, this means I can only summarise the key points of my thesis.
