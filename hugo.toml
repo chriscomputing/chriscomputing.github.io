@@ -29,8 +29,8 @@ enableRobotsTXT = true  # Für die coole SEO
 [languages]
     [languages.de]
     title = "Blog von chriscomputing"
-    languageName = "Deutsch 🇩🇪"
-    languageCode = 'de-DE'
+    label = "Deutsch 🇩🇪"
+    locale = 'de-DE'
     contentDir = "content"
     [languages.de.params]
         madeWith = "Gemacht mit [Bear Cub](https://github.com/clente/hugo-bearcub)"
@@ -39,8 +39,8 @@ enableRobotsTXT = true  # Für die coole SEO
 
     [languages.en]
     title = "Blog from chriscomputing"
-    languageName = "English 🇬🇧"
-    languageCode = 'en-EN'
+    label = "English 🇬🇧"
+    locale = 'en-EN'
     contentDir = "content.en"
     [languages.en.params]
         madeWith = "Made with [Bear Cub](https://github.com/clente/hugo-bearcub)"
