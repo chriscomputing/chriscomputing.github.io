@@ -54,3 +54,7 @@ enableRobotsTXT = true  # Für die coole SEO
 
     [params.author]
         name = "chriscomputing"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
