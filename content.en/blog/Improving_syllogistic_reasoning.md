@@ -1,8 +1,11 @@
 +++
 Title = "Improving syllogistic reasoning in LLMs (human edition)"
+description = "Learn how to mitigate the content effect in LLMs and improve syllogistic reasoning using Activation Steering and Neuro-symbolic logic solvers."
 date = 2026-08-11
-draft = true
+draft = false
 math = true
+tags = ["LLMs", "Machine Learning", "Activation Steering", "Neuro-symbolic AI", "NLP"]
+categories = ["Artificial Intelligence", "Research"]
 +++
 
 ## Introduction
@@ -26,7 +29,7 @@ We decided early on to focus our attention on small models. While large SOTA mod
 
 ## Related work
 
-Evaluating the capabilities of LLMS to perform syllogistic reasoning has attracted some attention in research already. Prior work consistently reported multiple shortcommings, most prominently content effect already discussed above. Furthermore, LLMs have been shown to produce human-like reasoning errors, for example falling prey to *figural effects* like sensitivity to the order of arguments and syntactic arrangements of variables. [^Bertolazzi_Inf]  
+Evaluating the capabilities of LLMs to perform syllogistic reasoning has attracted some attention in research already. Prior work consistently reported multiple shortcommings, most prominently content effect already discussed above. Furthermore, LLMs have been shown to produce human-like reasoning errors, for example falling prey to *figural effects* like sensitivity to the order of arguments and syntactic arrangements of variables. [^Bertolazzi_Inf]  
 Effort has also gone into different mitigation strategies: *activation steering*, a lightweight intervention that biases reasoning by manipulating internal activations [^Valentino_AS] can reduce reliance on world knowledge which reduces content effect. Another line of research is to pair an LLM with a logical solver. The LLM reads the plaintext arguments and synthesizes them into the input a logical solver expects. The solver then reliably computes the logical correctness [^Pan_Slv]. Finally, an effort has been made to improve syllogistic reasoning using prompt engineering only [^Ranaldi_CoT].
 
 [^Bertolazzi_Inf]: See e.g. Bertolazzi et al., [A Systematic Analysis of Large Language Models as Soft Reasoners: The Case of Syllogistic Inferences](https://doi.org/10.18653/v1/2024.emnlp-main.769)
@@ -154,9 +157,9 @@ Experiments were conducted using five different seeds (10, 20, 30, 40, 42). The 
 
 ### Activation Steering
 
-The activation steering approach consistently outperformed both the baseline and neurosymbolic approaches. In the English-only setting, the highest score was achieved by CAST, even though k-CAST attained higher overall accuracy. We attributed this discrepancy to limited training data: k-CAST may not have sufficient examples to reliably inform its condition detection, leading to less robust decisions under the primary evaluation metric.
+The activation steering approach **consistently outperformed both the baseline and neurosymbolic approaches**. In the English-only setting, the highest score was achieved by CAST, even though k-CAST attained higher overall accuracy. We attributed this discrepancy to limited training data: k-CAST may not have sufficient examples to reliably inform its condition detection, leading to less robust decisions under the primary evaluation metric.  
 
-In the multilingual setting, k-CAST surpassed CAST, plausibly because mean-vector--based condition detection becomes substantially noisier when aggregating activations across languages. This improvement comes at a computational cost: k-CAST requires loading activations for all training samples to perform condition detection and computing k-nearest neighbors for each query activation. These requirements can be expensive, particularly when scaling to larger datasets.
+In the **multilingual setting, k-CAST surpassed CAST**, plausibly because mean-vector-based condition detection becomes substantially noisier when aggregating activations across languages. This improvement comes at a computational cost: k-CAST requires loading activations for all training samples to perform condition detection and computing k-nearest neighbors for each query activation. These requirements can be expensive, particularly when scaling to larger datasets.
 
 ### Neuro-symbolic
 
