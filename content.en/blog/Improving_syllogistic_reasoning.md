@@ -2,7 +2,7 @@
 Title = "Improving syllogistic reasoning in LLMs (human edition)"
 description = "Learn how to mitigate the content effect in LLMs and improve syllogistic reasoning using Activation Steering and Neuro-symbolic logic solvers."
 date = 2026-08-11
-draft = false
+draft = true
 math = true
 tags = ["LLMs", "Machine Learning", "Activation Steering", "Neuro-symbolic AI", "NLP"]
 categories = ["Artificial Intelligence", "Research"]
