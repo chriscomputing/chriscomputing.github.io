@@ -3,6 +3,9 @@ title = "Transferability of benchmark results to real scientific applications"
 date = 2025-10-04
 draft = false
 math = false
+slug = "how-good-are-benchmarks"
+tags = ["High Performance Computing", "Benchmarking", "Supercomputer"]
+description = "Learn how useful benchmarks are to predict performance of HPC clusters on scientific applications"
 +++
 {{< alert type="info" title="" >}}
 This bachelor thesis has been recognized by my university as one of the best in the class of 2025.
@@ -29,7 +32,7 @@ The results of the four benchmarks were used to predict the computing power of t
 
 ## Benchmarks and applications
 
-Three synthetic benchmarks were used: [HPL](https://www.netlib.org/benchmark/hpl/), [STREAM](https://www.cs.virginia.edu/stream/ref.html) and four benchmarks from the [OSU Microbenchmark Suite](<https://mvapich.cse>. ohio-state.edu/benchmarks/): allreduce, alltoall, bibw and latency. Allreduce and Alltoall are MPI routines. The benchmarks measure the time required to execute them. Bibw and Latency use MPI routines to measure bidirectional bandwidth and latency between two nodes, respectively. STREAM is a benchmark that tests the RAM's bandwidth. On modern clusters, the runtime of a programme is no longer determined by CPU performance, but by how quickly data can reach the CPU. Although caches are a very important technology, ultimately very few problems fit into an application's cache. Therefore, RAM bandwidth is becoming increasingly important. The fourth benchmark used is the [NPB Suite] (<https://www.nas.nasa.gov/software/npb.html>). As with the OSU microbenchmarks, several benchmarks from the collection were used: the Conjugate Gradient (CG), Multigrid (MG) and Fourier Transformation (FT) benchmarks, for example. Conjugate gradient and multigrid are both methods for solving linear systems of equations; multigrid methods often use a conjugate gradient method.  
+Three synthetic benchmarks were used: [HPL](https://www.netlib.org/benchmark/hpl/), [STREAM](https://www.cs.virginia.edu/stream/ref.html) and four benchmarks from the [OSU Microbenchmark Suite](https://mvapich.cse.ohio-state.edu/benchmarks/): allreduce, alltoall, bibw and latency. Allreduce and Alltoall are MPI routines. The benchmarks measure the time required to execute them. Bibw and Latency use MPI routines to measure bidirectional bandwidth and latency between two nodes, respectively. STREAM is a benchmark that tests the RAM's bandwidth. On modern clusters, the runtime of a programme is no longer determined by CPU performance, but by how quickly data can reach the CPU. Although caches are a very important technology, ultimately very few problems fit into an application's cache. Therefore, RAM bandwidth is becoming increasingly important. The fourth benchmark used is the [NPB Suite](https://www.nas.nasa.gov/software/npb.html). As with the OSU microbenchmarks, several benchmarks from the collection were used: the Conjugate Gradient (CG), Multigrid (MG) and Fourier Transformation (FT) benchmarks, for example. Conjugate gradient and multigrid are both methods for solving linear systems of equations; multigrid methods often use a conjugate gradient method.  
 NWChem, an open-source chemistry project, was selected for the applications. The other application is proprietary, so I cannot reveal any further details here. NWChem was used to perform a DFT analysis of the C28 molecule. DFT calculates the distribution of electrons in a molecule. C28 is formed when 28 carbon atoms bond together. A limitation of NWChem is that DFT analyses are calculated using Gaussian basis sets, which are less amenable to parallel processing than other methods.
 
 ## Results

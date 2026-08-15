@@ -3,6 +3,9 @@ title = "Übertragbarkeit von Benchmarkergebnissen auf reale wissenschaftliche A
 date = 2025-10-04
 draft = false
 math = false
+slug = "wie-gut-sind-benchmarks"
+tags = ["High Performance Computing", "Benchmarking", "Supercomputer"]
+description = "Wie nützlich sind Benchmarks um die tatsächliche Performance wissenschaftlicher Anwendungen auf HPC Clustern vorherzusagen?"
 +++
 {{< alert type="info" title="" >}}
 Diese Bachelorarbeit von meiner Universität als eine der besten des Jahrganges 2025 ausgezeichnet.
