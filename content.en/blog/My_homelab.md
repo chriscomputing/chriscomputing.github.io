@@ -6,6 +6,7 @@ tags = ["Homelab", "Linux", "ZFS", "Selfhosting", "Monitoring","Docker"]
 date = 2026-08-15
 draft = true
 math = false
+toc_open = true
 +++
 
 A continuously evolving overview of what I selfhost in my homelab. Because I value my own digital sovereignty and privacy I focus on applications which remove dependence on Big Tech. I control my own images using Immich (a great first step to de-Google) and my documents using Paperless-ngx. These and more applications all run on one Debian 13 server which uses ZFS and Docker. My goal is to provide a highly reliable system with low maintenance, not to reinvent the wheel.
