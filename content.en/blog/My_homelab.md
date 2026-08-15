@@ -4,7 +4,7 @@ description = "Cost-efficient, low-power selfhosted homelab on a budget using De
 slug = "budget-homelab-debian-zfs-docker"
 tags = ["Homelab", "Linux", "ZFS", "Selfhosting", "Monitoring","Docker"]
 date = 2026-08-15
-draft = true
+draft = false
 math = false
 toc_open = true
 +++
