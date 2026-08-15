@@ -5,6 +5,7 @@ slug = "improving-llm-syllogistic-reasoning"
 date = 2026-08-11
 draft = false
 math = true
+toc_open = true
 tags = ["LLMs", "Machine Learning", "Activation Steering", "Neuro-symbolic AI", "NLP", "Local LLMs"]
 categories = ["Artificial Intelligence", "Research"]
 +++

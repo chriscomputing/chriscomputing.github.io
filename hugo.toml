@@ -25,6 +25,11 @@ enableRobotsTXT = true  # Für die coole SEO
         [markup.goldmark.extensions.passthrough.delimiters]
           block = [['$$', '$$']]
           inline = [['$', '$']]
+  
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
 
 # Theme Language Setup
 [languages]
@@ -52,6 +57,7 @@ enableRobotsTXT = true  # Für die coole SEO
 [params]
     hideUntranslated = false
     math = false
+    toc_open = true
 
     [params.author]
         name = "chriscomputing"

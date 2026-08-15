@@ -4,6 +4,7 @@ description = "Learn how to mitigate the content effect in LLMs and improve syll
 date = 2026-08-11
 draft = true
 math = true
+toc_open = true
 tags = ["LLMs", "Machine Learning", "Activation Steering", "Neuro-symbolic AI", "NLP"]
 categories = ["Artificial Intelligence", "Research"]
 +++
