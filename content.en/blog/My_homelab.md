@@ -27,9 +27,9 @@ As a small office workstation, the Thinkcentre is truly low-powered. Even with 2
 
 ### ZFS on Linux for reliable data storage
 
-ZFS is the gold-standard for filesystems. It features advanced data protection, high performance and a great support for snapshots, which I make great use of in my backups. The reasons why I decided to deploy ZFS are two-fold: First, I need reliable and performant storage. I selfhost not only for myself, but also for my family, which makes me responsible to not lose their precious images. Second, ZFS is widely used in the enterprise. By learning to work with it in my homelab, I already have relevant skills for potential jobs in my future career.  
+ZFS is the gold-standard for filesystems. It features advanced data protection, high performance and a great support for snapshots, which I make good use of in my backups. The reasons why I decided to deploy ZFS are two-fold: First, I need reliable and performant storage. I selfhost not only for myself, but also for my family, which makes me responsible to not lose their precious images. Second, ZFS is widely used in the enterprise. By learning to work with it in my homelab, I already have relevant skills for potential jobs in my future career.  
 
-Since the license of ZFS is incompatible with the Linux kernel, distributions usually do not ship it out of the box. The OpenZFS project develops [OpenZFS on Linux](https://zfsonlinux.org/) which can install OpenZFS as out-of-tree module using DKMS. It is only recommended to do so on stable operating systems with less frequent releases, as OpenZFS on Linux and the kernel are developed separately. This might induce compatibility issues on frequently updated kernels. Additionally, ZFS must be installed after the operating system, increasing the workload slightly when provisioning a new system.
+Since the license of ZFS is incompatible with the Linux kernel, distributions usually do not ship it out of the box. The OpenZFS project develops [OpenZFS on Linux](https://zfsonlinux.org/) which can install OpenZFS as out-of-tree module using DKMS. It is only recommended to do so on stable operating systems with less frequent releases, as OpenZFS on Linux and the kernel are developed separately. This might induce compatibility issues on frequently updated kernels. Additionally, ZFS must be installed after the operating system, increasing the workload slightly when provisioning a new system. In my opinion however, these tradeoffs are well worth what I gain thanks to ZFS.
 
 ### Docker to run my homelab services
 
@@ -39,7 +39,7 @@ I containerize all my workloads using [Docker](https://www.docker.com/). It is r
 
 A homelab is only as good as the software deployed in it. I am on a quest to replace as many as big-tech services as possible with self-hosted alternatives, starting with the ones that keep the most amount of private data. To improve user experience, I have the requirement that all services support Single-Sign-On (SSO). SSO allows all users to login with a device once and be authenticated with all services right away. Furthermore, I want my configuration to be as declarative as possible. In case of system failure, bringing my services online again quickly and with the same capabilities my users (read: my family) is used to is important to me.
 
-#### Authelia afor Single Sign On (SSO)
+#### Authelia for Single Sign On (SSO)
 
 To implement SSO using OpenID Connect (OIDC) I use [Authelia](https://www.authelia.com/). It is a lightweight alternative to Authentik. In contrast to the later, Authelia has no management UI. User management is done using a YAML file,  again fulfilling my requirement of a declarative configuration. Authelia is a certified OIDC 1.0 provider compatible to all services which support OIDC.
 
@@ -59,7 +59,7 @@ Unfortunately, Tailscale is proprietary, which is something I dislike. They at l
 
 #### Paperless-ngx for document management
 
-I also deploy [Paperless-ngx](https://docs.paperless-ngx.com/) for document management. I honestly expected to get more use out of it, but it is not yet set up perfectly, so usage might increase once I smoothed all the rough edges. Getting OIDC to work has been challenging for example. Although I got it working in the browser, the [Paperless mobile](https://play.google.com/store/apps/details?id=de.astubenbord.paperless_mobile&hl=en-US&pli=1) app is still unable to login. I would love to get it to work. Quickly taking pictures of a new document and have it uploaded to Paperless-ngx would greatly increase UX.
+I also deploy [Paperless-ngx](https://docs.paperless-ngx.com/) for document management. I honestly expected to get more use out of it, but I just got OIDC working with the [Paperless mobile](https://play.google.com/store/apps/details?id=de.astubenbord.paperless_mobile) app for Android. Thanks to the app, I can quickly snap a picture of a document to upload is. This is my only way to digitize analog documents, because I do not own a document scanner. I should make the time to sit down and add a bunch of digital and analog documents to Paperless.
 
 #### Beszel as docker-native monitoring solution
 
@@ -87,3 +87,10 @@ My parents still like to watch satellite TV. Commercial Set Top Boxes are expens
 *Media* also runs on Debian 13. Upon boot, it automatically logs in and launches [Kodi](https://kodi.tv/) which my parents can control from their smartphones using [Kore](https://play.google.com/store/apps/details?id=org.xbmc.kore&hl=en-US), the official Kodi app by the Kodi Foundation. In case my parents want to watch a streaming service, they can use the attached keyboard and mouse.  
 
 The Sundtek TV stick is plugged in via USB and receives the DVB-S signal from the satellite TV antenna. Sundtek offers an up-to-date driver for Linux which also installs a Systemd service to automatically start in the background.
+
+
+## Offsite Backups for redundancy
+
+I use a [Hetzner Storagebox](https://www.hetzner.com/en/storage/storage-box/) with 5 TB as offsite backup, using [Borg Backup](https://www.borgbackup.org/) as software solution. The storagebox is not only used by *pontus*, but also by my parents' devices and my own. 5 TB are plenty for the data we have. Each device has its own subaccount with their own SSH key and private Borg repository. Naturally, the backups are encrypted and happen daily.  
+
+Since Borg is a different technology than ZFS, my offsite backup strategy fulfills the "1" in the 3-2-1 rule, which demands that at least one backup should be done using a different technology.
