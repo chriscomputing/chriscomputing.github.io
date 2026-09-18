@@ -29,7 +29,7 @@ humans, show content effects on reasoning tasks](http://arxiv.org/abs/2207.07051
 
 We decided early on to focus our attention on compact open-weight LLMs. While large SOTA models feature higher baseline performance in formal logic, compact models are essential for edge deployment, resource-constrained environments, and low-latency inference. We used *Llama-3.2-1B-Instruct* and *Llama-3.1-8B-Instruct (8 bit)* in our project.
 
-## Related work
+## Existing literature on LLM content effect
 
 Benchmarking formal logic deduction and logical consistency in LLMs has become an active area of NLP research. Prior literature consistently highlights susceptibility to belief bias (e.g. content effects), where models prioritize semantic plausibility over deductive validity. Furthermore, LLMs have been shown to produce human-like reasoning errors, for example falling prey to *figural effects* like sensitivity to the order of arguments and syntactic arrangements of variables. [^Bertolazzi_Inf]  
 Effort has also gone into different mitigation strategies: *activation steering*, a lightweight intervention that biases reasoning by manipulating internal activations [^Valentino_AS] can reduce reliance on world knowledge which reduces content effect. Another line of research explores neuro-symbolic AI, pairing an LLM as a semantic parser with a downstream formal reasoning engine. The LLM reads the plaintext arguments and synthesizes them into the input a logical solver expects. The solver then reliably computes the logical correctness [^Pan_Slv]. Finally, an effort has been made to improve syllogistic reasoning using prompt engineering only [^Ranaldi_CoT].
@@ -53,7 +53,14 @@ An evaluation script was provided by the task organizers. It combines a standard
 
 **Accuracy:** Accuracy is the percentage of instances for which the system predicts the correct validity label (valid vs. invalid). This measures overall correctness on the task. The better a model predicts the validity tag, the higher is its accuracy.  
 
-**Content Effect metrics:** Beyond accuracy, the script reports content effect metrics by comparing performance across four subsets: *plausible–valid* (syllogisms which are both plausible according to world knowledge and valid), *implausible–invalid* (syllogisms which are both implausible according to world knowledge and invalid), *plausible–invalid* (syllogisms which are plausible according to world knowledge but invalid), and *implausible–valid* (syllogisms which are implausible according to world knowledge but valid). A lower content effect is preferable.  
+**Content Effect metrics:** Beyond accuracy, the script reports content effect metrics by comparing performance across four subsets: 
+
+- *plausible-valid*: Syllogisms which are both plausible and correct
+- *implausible-valid*: Syllogisms which are implausible but correct
+- *plausible-invalid*: Syllogisms which are plausible but incorrect
+- *implausible-invalid*: Syllogisms which are both implausible and incorrect
+
+A lower content effect is preferable.  
 
 The *Intra-plausibility content effect* measures bias towards a specific label within a plausibility condition:
 $$
