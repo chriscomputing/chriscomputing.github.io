@@ -158,7 +158,9 @@ We use models from the Llama family. In our experiments, Llama-3.2-1B-Instruct p
 
 ## Results: Activation Steering vs. Logic Solvers
 
-Experiments were conducted using five different seeds (10, 20, 30, 40, 42). The dataset was split 90/10 between training and evaluation (for activation steering). Since training only requires calculating steering vectors it can be performed quite quickly. On a single A100, training and evaluation across all languages and English-only finished within a few minutes, including evaluation for the Neuro-symbolic logic solver. No training was required for the later. For reference, evaluation includes a baseline which just prompted the LLM.
+Experiments were conducted using five different seeds (10, 20, 30, 40, 42). The dataset was split 90/10 between training and evaluation (for activation steering). Since training only requires calculating steering vectors it can be performed quite quickly. On a single A100, training and evaluation across all languages and English-only finished within a few minutes, including evaluation for the Neuro-symbolic logic solver. No training was required for the later.  
+
+For reference, evaluation includes a baseline which just prompted the LLM.
 
 ![Chart showing evaluation results of Activation Steering vs Neuro-symbolic solvers on English training data](/images/posts/improving_syllogistic_reasoning/results_english.png?width=600 "Results for English-only data. For Accuracy and Score, higher is better. For TCE, lower is better. Most important metric is Score.")
 
