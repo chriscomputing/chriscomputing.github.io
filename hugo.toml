@@ -4,7 +4,7 @@ title = ''
 # --- Theme Options --- #
 theme = "hugo-bearcub"
 copyright= "chriscomputing (CC BY-NC-SA 4.0)"
-defaultContentLanguage = "de"
+defaultContentLanguage = "en"
 enableRobotsTXT = true  # Für die coole SEO
 
 # Markup Setup
@@ -37,7 +37,7 @@ enableRobotsTXT = true  # Für die coole SEO
     title = "Blog von chriscomputing"
     label = "Deutsch 🇩🇪"
     locale = 'de-DE'
-    contentDir = "content"
+    contentDir = "content.de"
     [languages.de.params]
         madeWith = "Gemacht mit [Bear Cub](https://github.com/clente/hugo-bearcub)"
         dateFormat = "02.01.2006"
@@ -47,7 +47,7 @@ enableRobotsTXT = true  # Für die coole SEO
     title = "Blog from chriscomputing"
     label = "English 🇬🇧"
     locale = 'en-EN'
-    contentDir = "content.en"
+    contentDir = "content"
     [languages.en.params]
         madeWith = "Made with [Bear Cub](https://github.com/clente/hugo-bearcub)"
         dateFormat = "2006-01-02"

@@ -1,40 +1,37 @@
 +++
-Title = "Syllogistisches Denken in LLMs verbessern"
-description = "Lerne, content effect in LLMs zu verringern um syllogistisches Denken mittels Activation Steering und neuro-symbolischen logischen Löser zu verbessern."
+Title = "Improving syllogistic reasoning in LLMs (human edition)"
+description = "Learn how to mitigate the content effect in LLMs and improve syllogistic reasoning using Activation Steering and Neuro-symbolic logic solvers."
 date = 2026-08-11
-draft = false
+draft = true
 math = true
 toc_open = true
 tags = ["LLMs", "Machine Learning", "Activation Steering", "Neuro-symbolic AI", "NLP"]
 categories = ["Artificial Intelligence", "Research"]
 +++
 
-## Syllogistisches Denken von LLMs verbessern
+## Introduction
 
-Large Language Models (LLMs) wissen viel über die Welt, was häufig ihrer Fähigkeit strikte logische Folgerungen zu machen in die Quere kommt, insbesondere wenn diese nicht mit dem Weltwissen kompatibel sind. Ein hervorragendes Beispiel ist **syllogistisches denken**, bei dem LLMs Probleme mit dem so genannten *content effect* haben. Content effect wird das oben beschriebene Phänomen genannt, nämlich wenn eine logisch valide Schlussfolgerung verworfen wird da sie inhaltlich nicht mit dem Weltwissen des LLMs übereinstimmt.  
+During the winter semester 2025/2026, I attended a course on natural language processing, which of course included LLMs. Part of the grading of this course was a group project, which I completed with two friends of mine. We chose [task 11](https://sites.google.com/view/semeval-2026-task-11) from the SemEval 2026 conference. Unfortunately, the deadlines of our project and the SemEval task did not line up properly, meaning we were unable to officially submit our project. Both the lecture and this project taught me a lot about how LLMs work. This blogpost is a condensed writeup of what we did, posted with permission by my co-authors. Some snippets are direct quotes from our final report.
 
-In diesem Post erläutere ich zwei Methoden, um content effect zu verringern: Activation Steering und neuro-symbolosch logische Löser. Dieser Post basiert auf einem Gruppenprojekt, welches ich zusammen mit 2 Freunden für einen Universitätskurs in Natural Language Processing gemacht habe. Leider hatten wir keine Zeit mehr, unser Projekt für [Aufgabe 11](https://sites.google.com/view/semeval-2026-task-11) der SemEval 2026 einzureichen, auf der unser Projekt basiert hat. Selbstverständlich habe ich vor der Veröffentlichung dieses Posts das Einverständnis meiner Co-Autoren eingeholt. Ein paar Absätze sind direkte Zitate aus unserem Report.
+## Motivation
 
-### Was ist syllogistisches Denken?
+LLMs have great knowledge and understanding of the world. Unfortunately, this sometimes does them more harm than good. An example of this is *syllogistic reasoning*, where a conclusion is drawn from at least one premise. Since the premises do not have to align with facts in the real world, conclusions might contradict world knowledge an LLM has.
 
-Eine Schlussfolgerung wird aus mindestens einer Premisse gezogen. Dabei geht es ausschließlich um die logische Validität, unabhängig davon, ob Prämissen oder die Schlussfolgerung in der Realität wahr ist. LLMs vermischen oft faktische und logische Validität, was zu falschen Schlussfolgerungen führt.
-
-{{< alert type="info" title="Beispiel Syllogismus" >}}
-Ein Tier welches Milch produziert, ist eine Kuh. Eine Ziege produziert Milch. Daher ist eine Ziege eine Kuh.
+{{< alert type="info" title="Example syllogism" >}}
+An animal which produces milk is a cow. A goat produces milk. Therefore, a goat is a cow.
 {{< /alert >}}
 
-Das obrige Beispiel ist logisch korrekt, aber faktisch nicht, und stimmt nicht mit dem Weltwissen eines LLMs überein. Daher tendieren LLMs dazu, diesen Syllogismus als falsch zu bewerten. Dieses als content effect bekanntes Phänomen ist das schwerwiegenste Problem, welches unsere SemEval Aufgabe lösen sollte. .[^Lampinen_CE] 
+The above example is logically correct, but not consistent with world knowledge. Thus, LLMs tend to flag the conclusion as false. This phenomena is known as *content effect* and the most severe problem our SemEval task aimed to solve.[^Lampinen_CE] Faulty reasoning in LLMs is a substantial obstacle for deployments requiring dependable reasoning, for example formal verification, decision support and automated deduction.  
 
 [^Lampinen_CE]: See e.g. Lampinen et al., [Language models, like
 humans, show content effects on reasoning tasks](http://arxiv.org/abs/2207.07051)
 
-Wir haben uns früh dazu entschlossen, mit kleinen open-weight LLMs zu arbeiten. Zwar haben große state-of-the-art (SOTA) Modelle eine deutlich höhere Grundfähigkeit, aber kleine Modelle sind wichtig für edge-deployments, resourcenbeschränkte Umgebungen und low-latency inferenz. Wir haben *Llama-3.2-1B-Instruct* und *Llama-3.1-8B-Instruct (8 bit)* verwendet.
+We decided early on to focus our attention on small models. While large SOTA models are more robust in syllogistic reasoning, they are unsuited for resource constrained environments, or when low latency is required. We used *Llama-3.2-1B-Instruct* and *Llama-3.1-8B-Instruct (8 bit)* in our project.
 
-## Bestehende Literatur zum content effect in LLMs
+## Related work
 
-Das Benchmarking formaler logischer Deduktion und logischer Konsistenz in LLMs hat sich zu einem aktiven Forschungsgebiet der NLP-Forschung entwickelt. In der bisherigen Literatur wird häufig die Anfälligkeit für „Belief Bias“ (z. B. content effect) hervorgehoben, bei denen Modelle semantische Plausibilität gegenüber deduktiver Gültigkeit priorisieren. Darüber hinaus hat sich gezeigt, dass LLMs menschenähnliche Denkfehler produzieren, indem sie beispielsweise *figurativen Effekten* zum Opfer fallen, wie etwa der Sensitivität gegenüber der Reihenfolge von Argumenten und der syntaktischen Anordnung von Variablen. [^Bertolazzi_Inf]  
-
-Es wurden auch Anstrengungen in verschiedene Strategien zur Minderung dieser Probleme investiert: *activation steering*, eine einfache Maßnahme, die das Schlussfolgern durch die Manipulation interner Aktivierungen beeinflusst [^Valentino_AS], kann die Abhängigkeit von Weltwissen verringern, was wiederum den Inhaltseffekt reduziert. Ein weiterer Forschungsansatz befasst sich mit neuro-symbolischer KI, bei der ein LLM als semantischer Parser mit einer nachgeschalteten Engine für formales Schlussfolgern kombiniert wird. Das LLM liest die Argumente im Klartext und wandelt sie in die Eingabe um, die ein logischer Löser erwartet. Der Löser berechnet dann zuverlässig die logische Korrektheit [^Pan_Slv]. Außerdem wurden Anstrengungen unternommen, das syllogistische Schlussfolgern ausschließlich durch Prompt-Engineering zu verbessern [^Ranaldi_CoT].
+Evaluating the capabilities of LLMs to perform syllogistic reasoning has attracted some attention in research already. Prior work consistently reported multiple shortcommings, most prominently content effect already discussed above. Furthermore, LLMs have been shown to produce human-like reasoning errors, for example falling prey to *figural effects* like sensitivity to the order of arguments and syntactic arrangements of variables. [^Bertolazzi_Inf]  
+Effort has also gone into different mitigation strategies: *activation steering*, a lightweight intervention that biases reasoning by manipulating internal activations [^Valentino_AS] can reduce reliance on world knowledge which reduces content effect. Another line of research is to pair an LLM with a logical solver. The LLM reads the plaintext arguments and synthesizes them into the input a logical solver expects. The solver then reliably computes the logical correctness [^Pan_Slv]. Finally, an effort has been made to improve syllogistic reasoning using prompt engineering only [^Ranaldi_CoT].
 
 [^Bertolazzi_Inf]: See e.g. Bertolazzi et al., [A Systematic Analysis of Large Language Models as Soft Reasoners: The Case of Syllogistic Inferences](https://doi.org/10.18653/v1/2024.emnlp-main.769)
 
@@ -44,38 +41,27 @@ Es wurden auch Anstrengungen in verschiedene Strategien zur Minderung dieser Pro
 
 [^Ranaldi_CoT]: See e.g. Ranaldi et al., [Improving Chain-of-Thought Reasoning via Quasi-Symbolic Abstractions](https://aclanthology.org/2025.acl-long.843/)
 
-## Der SemEval 2026 Datensatz
+## Dataset
 
-Der SemEval 2026 Aufgabe 11 Datensatz besteht aus binären Syllogismen mit je zwei Prämissen und einer Schlussfolgerung. Das LLM muss entscheiden, ob die Schlussfolgerung logisch valide ist. Zusätzlich hat jeder Syllogismus ein *plausability label*, welches angibt, ob die korrekte Schlussfolgerung mit dem Weltwissen eines LLMs übereinstimmt. Dieses Label wurde natürlich nur während dem Training verwendet, nicht während der Evaluation. Die Antwort des LLMs kann mit einem *validity label* überprüft werden.  
+The dataset was provided by the task. It consists of short syllogistic arguments with two premises and one conclusion. The data is available in English only. The final system should determine if the conclusion is logically valid given both premises. Additionally, every item had a *plausibility label*, indicating wether the correct conclusion lines up with world knowledge. This label was only used during training, not during evaluation.  
+Our task called for, additionally to English, evaluation in a set of different languages. They included languages with a large available corpus like German and Italian, but also languages with less usage on the internet like Swahili or Bengali. In total, the systems were evaluated on 12 different languages. Since the training data is only available in English, we used a simple translation pipeline based on the *facebook/nllb-200-3.3B* model to translate them into the other languages. We ensured accurate translation by sampling a small subset for each language and checking them by hand.
 
-Der Datensatz ist nur auf Englisch verfügbar. Da die offizielle Evaluation auch weitere Sprachen beinhaltet, haben wir den Datensatz mit Hilfe von Meta's *facebook/nllb-200-3.3B* in alle Zielsprachen übersetzt. Weitere Zielsprachen waren unter anderem Deutsch und Italienisch, aber auch weniger in Trainingsdaten repräsentierte Sprachen wie Swahili oder Bengali. Insgesamt wird das System auf 12 verschiedenen Sprachen evaluiert.
+## Evaluation
 
-## Auswertung der Ergebnisse
+An evaluation script was provided by the task organizers. It combines a standard correctness metric with additional measures intended to quantify content bias.  
 
-Die Organisatoren von Aufgabe 11 haben ein Evaluationsskript zur Auswertung bereitgestellt. Es kombiniert eine gewöhnliche Korrektheitsmetrik mit weiteren Metriken, um content effect zu erkennen.  
+**Accuracy:** Accuracy is the percentage of instances for which the system predicts the correct validity label (valid vs. invalid). This measures overall correctness on the task. The better a model predicts the validity tag, the higher is its accuracy.  
 
-**Genauigkeit:**  
-Genauigkeit ist der Anteil der Antworten bei denen das System die Validität des Syllogismus richtig eingeschätzt hat. Desto höher die Genauigkeit, desto besser.  
+**Content Effect metrics:** Beyond accuracy, the script reports content effect metrics by comparing performance across four subsets: *plausible–valid* (syllogisms which are both plausible according to world knowledge and valid), *implausible–invalid* (syllogisms which are both implausible according to world knowledge and invalid), *plausible–invalid* (syllogisms which are plausible according to world knowledge but invalid), and *implausible–valid* (syllogisms which are implausible according to world knowledge but valid). A lower content effect is preferable.  
 
-**Content Effect Metriken:**  
-Außerdem gibt das Skript mehrere Metriken im Zusammenhang mit dem content effect zurück:
-
-- *plausible-valid*: Syllogismen die sowohl plausibel als auch korrekt sind
-- *impausible-valid*: Syllogismen die zwar unplausibel, aber korrekt sind
-- *plausible-invald*: Syllogismen, die zwar plausibel, aber falsch sind
-- *implausible-valid*: Syllogismen die sowohl unplausibel als auch falsch sind
-
-Ein niedriger content effect ist besser.  
-
-Der *Intra-plausability content effect* misst den Bias in Richtung eines spezifischen Labels innerhalb der gleichen Plausibilität, also beispielsweise ob ein System bei plausiblen Syllogismen eher dazu tendiert diese als korrekt zu klassifizieren, auch wenn sie das nicht sind. Er wird berechnet als:
-
+The *Intra-plausibility content effect* measures bias towards a specific label within a plausibility condition:
 $$
 \begin{equation}
 \text{Bias}_{\text{intra}} = \frac{1}{2} \left( \left| \text{ACC}_{\text{plausible,valid}} - \text{ACC}_{\text{implausible,valid}} \right| + \left| \text{ACC}_{\text{plausible,invalid}} - \text{ACC}_{\text{implausible,invalid}} \right| \right)
 \end{equation}
 $$
 
-Der *Cross-plausibility content effect* misst, wie sehr das Modell sich auf die Plausibilität innerhalb eines korrektheit-Labels verlässt:  
+The *Cross-plausibility content effect* measures reliance on plausibility within a formal validity condition:
 
 $$
 \begin{equation}
@@ -83,7 +69,7 @@ $$
 \end{equation}
 $$
 
-Der *Total content effect* wird aus dem Durchschnitt der beiden Plausibilitäten berechnet:  
+Finally, the *Total content effect* is calculated as the average of both plausibilities:
 
 $$
 \begin{equation}
@@ -91,35 +77,37 @@ $$
 \end{equation}
 $$
 
-Von wo ausgehend der *finale Score* berechnet werden kann:
+From there, the *final score* is computed as:  
 
 $$
 Score = \frac{\text{accuracy}}{1 + \log(1 + \text{TCE})}
 $$
 
-## Ansätze um syllogistisches Denken von Llama 3 zu verbessern
 
-Wir haben zwei Ansätze versucht, deren Resultate im späteren Verlauf miteinander verglichen werden. Der Erste ist Activation Steering, der Zweite einen logischen Löser zusammen mit dem LLM zu nutzen.
+## Methodology
+
+We tried two approaches two solve the task, whose results will be compared later. The first is activation steering, and the second is deploying a logic solver in conjunction with an LLM. 
 
 ### Activation Steering
 
-Die Grundeidee von Activation Steering ist es, die internen Berechnungen eines LLMs zu manipulieren, indem interne Aktivierungen linear in die gewünschte Richtung verschoben werden. Um diese Richtung zu identifizieren, wird ein Satz gelableter Trainingsdaten $D = \{(x_i, y_i)\}_{i=1}^{N}$ benötigt, wobei positive Label logisch korrekte Schlussfolgerungen markieren, und negative Label durch belief bias entstandene negative Schlussfolgerungen.  
+The core idea of activation steering is to modify an LLM’s internal computation by linearly shifting hidden activations in a desired direction. Finding that direction requires a set of labeled training data $D = \{(x_i, y_i)\}_{i=1}^{N}$  where the label $y_i \in \{+1,-1\}$ marks intended or unintended behaviour. In our case, we define intended behavior as samples the model classifies correct and wrong predictions as unintended behavior.  
 
-In meiner Erfahrung ist die folgende Erklärung für Activation Steering einfach zu verstehen: Stellen Sie sich ein Gehirn vor. Dieses Gehirn wird Medikamenten ausgesetzt, welche Gehirnaktivitäten in bestimmten Arealen verstärken oder verringern. Beispiele für solche Medikamente sind solche gegen Narkolepsie. Das ist was Activation Steering mit LLMs macht. Es beeinflusst die Aktivierungen des LLMs, um dessen Verhalten zu beeinflussen. Activation Steering ist vergleichbar zu dem was Anthropic in ihrem Experiment getan hat, welches [Golden Gate Claude](https://www.anthropic.com/news/golden-gate-claude) hervorgebracht hat.  
+I have found the following explanation to be much easier to understand for most people:  
+Imagine a brain. That brain is put on some medicine, which boosts or reduces the activity in a certain region. For example, medicine against narcolepsy, which boosts certain pathways in the human brain to increase wakefulness. That's what activation steering is doing to the hidden layers of an LLM. We can use that to manipulate the LLM's behaviour. This is related to what Anthropic did in their research which resulted in [Golden Gate Claude](https://www.anthropic.com/news/golden-gate-claude).  
 
-Der größte Vorteil von Activation Steering liegt in seiner geringen Rechenintensität. Es bedarf nur weniger Ressourcen um die korrekten Aktivierungen zu identifizieren, deutlich weniger als traditionelles Finetuning. Des Weiteren erhöht es nicht den Rechenaufwand während der Inferenz, und kann auf einer pro-Anfragen Basis angewandt werden.
+The major advantage of activation steering is how lightweight it is. It takes only few resources to train, much less than traditional finetuning. Furthermore, it does not increase inference cost and can be conditionally applied on a per-query basis.
 
-#### Contrastive Activation Addition (CAA)
+#### Contrastive Activation Addition
 
-Contrastive Activation Addition (CAA) ist eine recht einfache Form des Activation Steerings. Alle Aktivierungen für gewollte und ungewollte Ausgaben werden getrennt voneinander gesammelt. Wenn $\mu^+$ der Durchschnitt der gewollten (positiven) Aktivierungen und $\mu^-$ der Durchschnitt der ungewollten (negativen) Aktivierungen ist, kann ihre Differenz als $\Delta \phi = \mu^{+} - \mu^{-}$ berechnet werden. Während der Inferenz können die Aktivierungen des Modells modifiziert werden, indem eine skalierte Version des Kontrastvektors angewandt wird: $\tilde{\phi}(x) = \phi(x) + \alpha \cdot \Delta \phi$. $\phi$ ist die unmanipulierte Aktivierung und $\tilde{\phi}$ die finale Aktivierung mit angewandtem Steering. Diese Intervention schiebt die Repräsentationen der hidden States in Richtung des Subspaces welcher mit ungebiasten logischen Schlussfolgerungen assoziiert wird.[^Rimsky_CAA]  
+Contrastive Activation Addition (CAA) is a relatively simple form of activation steering. All activations for both desired and undesired outputs are collected separately. If $\mu^+$ is the average of desired (positive) activations and $\mu^-$ the average of undesired (negative) activations, there difference can be calculated as $\Delta \phi = \mu^{+} - \mu^{-}$. During inference, the model’s activations are modified by adding a scaled version of the contrastive vector: $\tilde{\phi}(x) = \phi(x) + \alpha \cdot \Delta \phi$. $\phi$ is the unmanipulated activation and $\tilde{\phi}$ the final activation with steering applied. $\alpha$ is a scaling factor. This shifts the model's activations towards the regions which produced positive outputs.[^Rimsky_CAA]  
 
 [^Rimsky_CAA]: See e.g. Rimsky et al., [Steering llama 2 via contrastive activation addition](https://doi.org/10.18653/v1/2024.acl-long.828)
 
-#### Conditional Activation Steering (CAST)
+#### Conditional Activation Steering
 
-Conditional Activation Steering (CAST) stellt eine Verbesserung über CAA dar. Im Gegensatz zu CAA subtrahiert CAST auch vom unmanipuliertem Kontrollvektor $\phi$ [^Valentino_AS]. Wir haben Bedingungsvektoren verwendet, um zu bestimmen, ob $\alpha$ positiv oder negativ sein sollte, wobei letzteres die Richtung des Kontrollvektors im Vergleich zu CAA invertiert.  
+An improvement upon CAA is known as Conditional Activation Steering (CAST). Contrary to CAA, CAST also subtracts from the unmanipulated steering vector $\phi$ [^Valentino_AS]. We used condition vectors to determine if $\alpha$ should be positive or negative, the later reversing the steering direction in comparison to CAA.  
 
-Wir haben mit zwei Bedingungsvektoren $\psi_{c}^{+}$ und $\psi_{c}^{-}$ gearbeitet, welche die durchschnittliche Summe valider und invalider Aktivierungen sind. Das Vorzeichen von $\alpha$ wird dadurch bestimmt, ob die Aktivierung ähnlicher zum durchschnitt der validen oder invaliden Aktivierungen während dem Training ist.
+We worked with two condition vectors $\psi_{c}^{+}$ and $\psi_{c}^{-}$ that are average aggregation of valid and invalid activations. The sign of $\alpha$ is determined by whether the activation is more similar to a valid or an invalid sample.
 
 $$
 f \left(\alpha, \phi(x), \psi_c^{+}, \psi_c^{-}\right) =
@@ -129,64 +117,57 @@ f \left(\alpha, \phi(x), \psi_c^{+}, \psi_c^{-}\right) =
 \end{cases}
 $$
 
-**k-cast:** Ein Problem mit gewöhnlichen CAST Methoden ist Informationsverlust welcher dadurch entsteht, dass alle validen und invaliden Aktivierungen während dem Training zusammen gerechnet werden. Dadurch gehen Details in der Aktivierung verloren. k-CAST verwendet k-nearest-neighbor clustering, um während der Inferenz vergleichbare Aktivierungen aus dem Training zu finden. Das Vorzeichen von $\alpha$ wird anhand der $k = 5$ nächsten Nachbarn mit den ähnlichsten Aktivierungen bestimmt.
+**k-CAST:** One problem the standard CAST method possesses is that there is some information loss when aggregating all valid and invalid activations vectors during train time. To overcome that, k-CAST utilizes k-nearest-neighbour clustering. Before testing a new sample, all activations from all samples in the training set need to be stored. Then, k-CAST finds the $k = 5$ nearest neighbors of the new sample in activation space and select the sign of $\alpha$ based on a majority decision.  
 
-### Neuro-symbolic logischer Löser
+### Neuro-symbolic logic solver
 
-Der zweite Ansatz ist es, das LLM mit einem logischen Löser zu verknüpfen. Der Löser überprüft die Logik des Syllogismus, was korrekte Resultate garantiert, wenn die Eingaben korrekt waren. Das LLM muss den Syllogismus in syntaktisch und semantisch korrekte Eingaben für den Löser parsen.  
+The second main approach was using a logic solver together with an LLM. The solver performs the actual checking of the logic, guaranteeing correct results given correct inputs. The LLM only needs to translate the syllogism into syntactically valid and semantically correct input, which is something they are quite good at.  
+We mapped each sentence to exactly one of the qualifiers `{all, none, some, some_not}` and two unary predictors `(a,b)` resulting in a compact symbolic representation that is independent of the underlying language. 
 
-Wir haben jeden Satz auf exakt einen Qualifier aus `{all, none, some, some_not}` und zwei Prediktoren `(a,b)` gemapped, was zu einer kompakten symbolischen Repräsentation unabhängig von der Sprache des Syllogismus führt.  
+![Extraction of inputs by the LLM](/images/posts/improving_syllogistic_reasoning/ns-solver_extraction.png?width=600 "Extraction of inputs by the LLM" )
 
-![Extrahierung von Eingaben durch das LLM](/images/posts/improving_syllogistic_reasoning/ns-solver_extraction.png?width=600 "Extrahierung von Eingaben durch das LLM" )
+#### Three-staged extraction
 
-#### Dreischrittige Pipeline zur Datenextraktion
+For each syllogism, we prompted the LLM to extract a *quantifier* and two *terms* from each of the three sentences. Extracting all three sentences jointly increased formatting errors and occasionally mixed information across sentences, so we performed extraction sentence-by-sentence. To promote consistent terminology, we tracked a short `used_predicates` list and include it in the prompt, encouraging reuse of earlier predicate names.
 
-Für jeden Syllogismus sollte das LLM einen *quantifier* und zwei *terms* von jedem der drei Sätze extrahieren. Aus allen drei Sätzen gleichzeitig zu extrahieren erhöhte Formatierungsfehler und vermischte gelegentlich Informationen aus mehreren Sätzen, weswegen Extrahierung Satz-für-Satz ausgeführt wurde. Um konsistente Benennung zu fördern, haben wir eine kurze `used_predicates` Liste geführt, welche im Prompt integriert wurde und Wiederverwendung früherer Prädikatennamen gefördert hat.  
+Because the logic solver treats distinct strings as distinct predicates, we normalized extracted terms (lowercasing, replacing spaces with underscores, removing determiners conservatively, and singularizing English nouns). We also included the full syllogism in each prompt to further stabilize naming across sentences.
 
-Weil der logische Löser unterschiedliche Strings als unterschiedliche Prädikate behandelt, mussten extrahierte Begriffe normalisiert werden. Des Weiteren haben wir den vollständigen Syllogismus in jedem Prompt inkludiert, ebenfalls um stabile Benennung über alle Sätze hinweg zu fördern.  
+Finally, we validated outputs and passed them to the solver only if they match the required 3-tuple format `(quantifier=..., a=..., b=...)`. Malformed extractions are rare; when they occurred, we fell back to random guessing.
 
-Schlussendlich validierten wir Ausgaben und gaben sie im 3-tuple Format `(quantifier=..., a=..., b=...)` an den Löser weiter. Syntaktisch inkorrekte extrahierungen waren selten, aber wenn sie auftraten, sind wir auf zufälliges raten zurückgefallen.
+#### Logic solver
 
-#### Schlussfolgerungen mit dem Z3 Löser validieren
+We used Microsoft Research's [Z3](https://www.microsoft.com/en-us/research/project/z3-3/), a highly optimized Satisfiability Modulo Theories (SMT), to verify whether the extracted conclusion follows from the premises. Given the parsed terms of a syllogism, Z3 returned a binary verdict (`valid` or `invalid`), which served as the final output of our pipeline.
 
-Wir haben den [Z3](https://www.microsoft.com/en-us/research/project/z3-3/) Löser für SMT (Satisfiability Modulo Theories) von Microsoft verwendet, um zu bestimmen, ob die Schlussfolgerung korrekterweise aus den Prämissen folgt. Gegeben korrekt geparster Eingaben, gibt Z3 ein binäres Urteil (`valid` oder `invalid`) zurück, welches wir als die finale Ausgabe unserer Pipline verwendeten.
+#### Handling of multi-lingual data
 
-#### Umgang mit mehrsprachigen syllogistischen Daten
+To support the different languages required by our task, we separated language-specific preprocessing from the language-agnostic symbolic representation and extraction. We automatically detected the language and separated the input into 3 sentences using ICU sentence boundary detection before passing the input into the three-staged extraction pipeline. An English extraction prompt performed best across languages, so we used a single, language-independent prompt.  
 
-Um die durch unsere Aufgabe geforderte Unterstützung verschiedenster Sprachen sicherzustellen, haben wir sprach-abhängiges Preprocessing vom sprach-unabhängigen extrahieren getrennt. Wir detektieren die verwendete Sprache automatisch und trennen die 3 Sätze mittels ICU sentence boundary detection, bevor die Eingaben in die extraction Pipeline gegeben werden. Die besten Ergebnisse wurden mit einem englischen Prompt erzielt, unabhängig von der Sprache des Syllogismus.  
+After extraction, we normalize predicate strings using lightweight, language-specific filtering (e.g., removing articles) to reduce superficial variation, without translation or external linguistic resources. These steps consistently yielded suitable input for the solver.
 
-Nach der Extrahierung wurden die Prädikate mit sprachspezifischen Filtern normalisiert (beispielsweise Artikel entfernt). Diese Schritte ergaben in den allermeisten Fällen brauchbare Eingaben für den Solver.
+#### LLM choice
 
-#### Auswahl des richtigen LLMs
+We use models from the Llama family. In our experiments, Llama-3.2-1B-Instruct proved unreliable for structured extraction (e.g., it often outputs `some` instead of `some_not`), so we additionally evaluated Llama-3.1-8B-Instruct in 8-bit quantized form. Both models are fast and require few resources, enabling low-latency or low-resource deployment.
 
-Wir haben Modelle der Llama Familie verwendet. Llama-3.2-1B-Instruct stellte sich als unverlässlich für die strukturierte Extraktion heraus (bspw. gibt es häufig `some` statt `some_not` aus), weswegen wir zusätzlich Llama-3.1-8B-Instruct quantisiert auf 8-bit verwendet haben. Beide Modelle sind schnell und brauchen wenige Ressourcen, welches niedriglatente Anwendung in Ressourcen-beschränkten Umgebungen ermöglicht.
+## Results
 
-## Ergebnisse: Activation Steering vs. Logische Löser
+Experiments were conducted using five different seeds (10, 20, 30, 40, 42). The dataset was split 90/10 between training and evaluation (for activation steering). Since training only requires calculating steering vectors it can be performed quite quickly. On a single A100, training and evaluation across all languages and English-only finished within a few minutes, including evaluation for the Neuro-symbolic logic solver. No training was required for the later. For reference, evaluation includes a baseline which just prompted the LLM.
 
-Die Experimente wurden mit 5 verschiedenen Seeds (10, 20, 30, 40, 42) ausgeführt. Für Activation Steering wurde der Datensatz 90/10 zwischen Training und Evaluation aufgeteilt. Da das Training nur aus der Berechnung der Kontrollvektoren besteht, geschieht es schnell. Auf einer einzelnen Nvidia A100 benötigte Training und Evaluation für alle Sprachen sowie nur für englischsprachige Eingaben insgesamt nur wenige Minuten, inklusive der Evaluation des logischen Lösers. Letzterer benötigt kein Training.  
+![Final results on English-only data](/images/posts/improving_syllogistic_reasoning/results_english.png?width=600 "Results for English-only data. For Accuracy and Score, higher is better. For TCE, lower is better. Most important metric is Score.")
 
-Die Evaluation beinhaltet als Referenz außerdem eine Baseline, in der das LLM nur gepromptet wurde.  
-
-![Diagramm mit den Evaluierungsergebnissen von Activation Steering im Vergleich zu neuro-symbolischen Solvern auf englischen Trainingsdaten.](/images/posts/improving_syllogistic_reasoning/results_english.png?width=600 "Ergebnisse für rein englische Daten. Für Accuracy und Score gilt: Höher ist besser. Für TCE gilt: Niedriger ist besser. Die wichtigste Metrik ist der Score.")
-
-![Diagramm mit den Evaluierungsergebnissen von Activation Steering im Vergleich zu neuro-symbolischen Solvern auf mehrsprachigen Trainingsdaten.](/images/posts/improving_syllogistic_reasoning/results_multi.png?width=600 "Ergebnisse für mehrsprachige Daten. Für Accuracy und Score gilt: Höher ist besser. Für TCE gilt: Niedriger ist besser. Die wichtigste Metrik ist der Score.")
+![Final results on multilingual data](/images/posts/improving_syllogistic_reasoning/results_multi.png?width=600 "Results for multilingual data. For Accuracy and Score, higher is better. For TCE, lower is better. Most important metric is Score.")
 
 ### Activation Steering
 
-Activation Steering ist **dauerhaft besser als die Baseline und neuro-symbolischen Ansätze**. Im ausschließend englischsprachigen Test wurde der beste Score von CAST erreicht, obwohl k-CAST eine höhere *accuracy* erreichte. Wir vermuten, dass es daran liegt, dass k-CAST nicht ausreichend viele Trainingsdaten zur Verfügung hat, um seine das Vorzeichen anhand der 5 nächsten Nachbarn **korrekt** zu bestimmen.  
+The activation steering approach **consistently outperformed both the baseline and neurosymbolic approaches**. In the English-only setting, the highest score was achieved by CAST, even though k-CAST attained higher overall accuracy. We attributed this discrepancy to limited training data: k-CAST may not have sufficient examples to reliably inform its condition detection, leading to less robust decisions under the primary evaluation metric.  
 
-Im **mehrsprachigen Test ist k-CAST besser als CAST**, vermutlich weil Aktivierung anhand des durchschnittlichen Vektors erheblich ungenauer wird, wenn die Aktivierungen für alle Sprachen summiert werden. Allerdings hat k-CAST mehr Rechenaufwand, da alle Aktivierungen der Trainingsdaten geladen werden müssen, um die k-nearest Nachbarn zu identifizieren, welche das Vorzeichen von $\alpha$ bestimmen.
+In the **multilingual setting, k-CAST surpassed CAST**, plausibly because mean-vector-based condition detection becomes substantially noisier when aggregating activations across languages. This improvement comes at a computational cost: k-CAST requires loading activations for all training samples to perform condition detection and computing k-nearest neighbors for each query activation. These requirements can be expensive, particularly when scaling to larger datasets.
 
-### Neuro-symbolisch logische Pipeline
+### Neuro-symbolic
 
-Mit Llama 1B konnten wir nur eine geringe Verbesserung gegenüber der Baseline beobachten. Wir vermuten, dass dies hauptsächlich an Fehlern in der Extrahierungspipeline liegt. Llama 8b (quantisiert auf 8-bit) produziert deutlich bessere Ergebnisse, was zeigt, dass die Fähigkeit des LLMs ein wichtiger Faktor für diesen Ansatz darstellt. Noch fähigere LLMs würden vermutlich noch bessere Ergebnisse erzielen.  
+For the neuro-symbolic pipeline, we observed only little improvement over the baseline when using Llama 1B. We attributed this mainly to errors in the logical-form translation stage and to the limited capacity of the 1B model, which appears unable to perform this mapping reliably. Replacing Llama 1B with a larger variant (8b quantized) substantially improved performance, indicating that model capacity is a key factor for this approach.
 
-- **Llama 1B (Unter den Erwartungen geblieben):** Zeigte kaum Verbesserungen gegenüber der Baseline. Wir führen dies auf Fehler bei der Extraktion und Generierung der Eingaben für den Z3-Solver zurück, da das Modell mit 1B Parametern Schwierigkeiten hatte, Prämissen zuverlässig zuzuordnen.
+For Accuracy, Llama 1B slightly underperformed the baseline in both data settings, consistent with unstable or error-prone extraction. In contrast, Llama 8B improved accuracy in both settings, with a particularly pronounced increase on English data and a smaller but consistently positive gain on multilingual data. The TCE results show a complementary pattern. While Llama 1B exhibited worse baseline TCE than Llama 8B, it attained better TCE under the neuro-symbolic pipeline. Since TCE quantifies the extent to which predictions track the plausibility of a syllogism rather than its logical form, this indicates that the neuro-symbolic constraints reduced plausibility-driven bias. Notably, the smaller model’s decisions appear less influenced by semantic plausibility than those of the larger model.
 
-- **Llama 8B (Verbesserte Genauigkeit):** Verbesserte die Genauigkeit (Accuracy) in beiden Dateneinstellungen erheblich, mit einem deutlichen Anstieg bei den englischen Daten.
+## Conclusion
 
-- **Total Content Effect (TCE):** Interessanterweise erzielte Llama 1B unter den neuro-symbolischen Constraints einen besseren TCE als das 8B-Modell, obwohl es eine schlechtere Baseline bezüglich des TCE aufwies. Dies deutet darauf hin, dass die logischen Entscheidungen des kleineren Modells weniger von semantischer Plausibilität beeinflusst werden.
-
-## Schlussfolgerung
-
-In unserem Projekt haben wir gezeigt, dass wesentliche Verbesserungen der logischen Inferenz von LLMs mithilfe verschiedener Techniken möglich sind. Für mich persönlich stach Activation Steering als sehr vielseitiges Werkzeug mit geringem Overhead hervor, um ein Modell zu manipulieren. Im Gegensatz zu früheren Experimenten im Bereich Representation Engineering (wie Anthropics Golden Gate Claude), zeigt unsere Arbeit, wie Activation Steering kognitive Schlussfolgerungsfähigkeiten direkt steuern kann. Dies ist eine wichtige Demonstration auf dem Weg zur Spezialisierung von Modellen. In Zukunft würde ich gerne die Erklärbarkeit von KI (AI Explainability) weiter erforschen und untersuchen, wie ein besseres Verständnis genutzt werden könnte, um Modelle sicherer und besser zu machen.
+In our project, we showed that substantial improvements in syllogistic reasoning are possible using multiple techniques. For me personally, Activation Steering stood out as very versatile and low-overhead tool to manipulate a model. In contrast to past work like Golden Gate Claude or other papers, which changed what a model would talk about, we influenced the model's capabilities. This is an important demonstration towards improving specialization of models on-demand. In the future,  I would love to further explore AI explainability and how an improved understanding could be use to make models safer and better.

@@ -1,13 +1,15 @@
 +++
-title = 'Fibonacci in einer Sekunde'
-date = 2025-02-28
+title = 'Fibonacci in one Second'
+date = 2025-03-02
 draft = false
 math = true
 +++
-Vor einiger Zeit schlug YouTube mir ein [Video](https://youtu.be/LXm6ygZ3h7A?si=2RG1Io6w2f44w2tR) vor, indem der Creator [Sheafification of G](https://www.youtube.com/@SheafificationOfG) versuchte, die größtmögliche Fibonacci Zahl innerhalb einer Sekunde zu berechnen. Das Video ist Teil einer Serie, in der verschiedene Ansätze und verschiedene Programmiersprachen behandelt wurden. Ich empfehle sehr, die unterhaltenden und spannenden Videos zu schauen. Davon inspiriert beschloss ich, das ebenfalls zu versuchen, allerdings in Java. Nicht weil Java so eine weit verbreitete Sprache für wissenschaftliches Rechnen ist, sondern einfach weil ich länger kein Java mehr geschrieben habe. Meine Implementation befindet sich auf [Github](https://github.com/chriscomputing/fib-java).
 
-## Der naive Ansatz
-Die Fibonacci Reihe ist definiert als $fib(n) = fib(n-1) + fib(n-2)$, und $fib(0)= 0, fib(1) = 1$. Daher ist es naheliegend, Fibonacci rekursiv zu implementieren. Daraus ergibt sich der Pseudocode:
+Some time ago, YouTube suggested a [video](https://youtu.be/LXm6ygZ3h7A?si=2RG1Io6w2f44w2tR) in which the creator [Sheafification of G](https://www.youtube.com/@SheafificationOfG) attempted to compute the largest possible Fibonacci number within one second. The video was part of a series exploring different approaches and programming languages. I highly recommend watching these entertaining and engaging videos. Inspired by this, I decided to try the same, but in Java. Not because Java is a widely used language for scientific computing, but simply because I hadn't written Java in a while. My implementation can be found on [GitHub](https://github.com/chriscomputing/fib-java).
+
+## The Naive Approach
+The Fibonacci sequence is defined as $fib(n) = fib(n-1) + fib(n-2)$, with $fib(0)= 0, fib(1) = 1$. It is therefore natural to implement Fibonacci recursively. This results in the following pseudocode:
+
 ```
 fib(n):
   if n == 0:
@@ -16,10 +18,12 @@ fib(n):
     return 1
   return fib(n-2) + fib(n-1)
 ```
-Es ist einfach zu sehen, dass dieser Algorithmus nicht effizient ist. Für jede Berechnung müssen alle Fibonacci Zahlen von 0 aus ermittelt werden, sodass dieser Algorithmus eine Laufzeit von $O(exp(n))$ hat.
 
-## Dynamische Programmierung
-Die offensichtliche Verbesserung der rekursiven Variante ist, $fib(n-2)$ und $fib(n-1)$ zu speichern um sich viele Rechenschritte sparen zu können. Das ist ein Trick, den viele intuitiv anwenden, wenn sie eine Fibonacci Zahl von Hand errechnen sollen. Im allgemeinen wird die Technik, Ergebnisse vorheriger Schritte wieder zu verwenden, dynamische Programmierung genannt.
+It is easy to see that this algorithm is inefficient. For every computation, all Fibonacci numbers from 0 onwards must be determined, leading to a runtime of $O(exp(n))$.
+
+## Dynamic Programming
+The obvious improvement to the recursive variant is to store $fib(n-2)$ and $fib(n-1)$ to save many computational steps. This is a trick that many people intuitively use when calculating a Fibonacci number by hand. In general, the technique of reusing previous results is called dynamic programming.
+
 ```
 fib(n):
   a = 0
@@ -30,10 +34,11 @@ fib(n):
     a = tmp
   return a
 ```
-Man könnte meinen, dieser Algorithmus würde Fibonacci in $O(n)$ berechnen, da die Addition in einem einfachen For-Loop stattfindet. Das ignoriert aber, dass die Operation der Addition auf der Bitebene ebenfalls lineare Zeit in Anspruch nimmt. Daher hat dieser Algorithmus (auf Computer angewandt) die Laufzeit $O(n²)$.
+
+One might think this algorithm computes Fibonacci in $O(n)$, as the addition takes place within a simple for-loop. However, this ignores the fact that addition on the bit level also takes linear time. Therefore, this algorithm (when applied to a computer) has a runtime of $O(n²)$.
 
 ## Fast Squaring
-Der vorherige Ansatz bietet bereits eine bedeutende Verbesserung, und erschöpft das Verbesserungspotential asympthotischer Laufzeiten in diesem Beitrag. Das bedeutet aber nicht, dass wir kein besseres Ergebnis mehr erzielen können. Zum Glück gilt diese Aussage:
+The previous approach already offers a significant improvement and exhausts the potential for improving asymptotic runtimes in this article. However, this does not mean that we cannot achieve a better result. Fortunately, the following statement holds:
 
 $$
 \begin{bmatrix}
@@ -44,20 +49,22 @@ $$
 \end{bmatrix}
 $$
 
-Wenn wir also die Matrix $\begin{bmatrix}0 & 1 \\ 1 & 1\end{bmatrix}$ mit $n$ potenzieren, erhalten wir oben rechts und unten links die n-te Fibonacci Zahl. Ein Beweis für diese Aussage findet sich [hier](https://usaco.guide/plat/matrix-expo?lang=cpp). Insbesondere gepaart mit [Exponentiation by Squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring) ist es möglich, Fibonacci noch schneller zu berechnen.
+Thus, when we exponentiate the matrix $\begin{bmatrix}0 & 1 \\ 1 & 1\end{bmatrix}$ by $n$, we obtain the $n$-th Fibonacci number in the top right and bottom left positions. A proof for this statement can be found [here](https://usaco.guide/plat/matrix-expo?lang=cpp). In particular, combined with [Exponentiation by Squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring), it is possible to compute Fibonacci even faster.
+
 ```
 fib(n):
   M = {{0,1}, {1,1}}
   M = exp_by_squaring(M, n)
   return M[0][1]
 ```
-Exponentiation by Squaring hat den Vorteil, dass die Anzahl der benötigten Rechenoperationen von $O(n)$ im dynamischen Algorithmus auf $O(log(n))$ reduziert wird. Da für die letzte Multiplikation dennoch $O(n^2)$ Bitopertionen benötigt werden, bleibt die asympthotische Laufzeit (für Computer) dennoch gleich.
 
-## Umsetzung in Java
-In bester OOP Tradition habe ich ein BaseScheduler und BaseCalculator Interface geschrieben, sodass die konkreten Implementationen problemlos ausgetauscht werden können. Scheduler haben die Aufgabe, in möglichst wenig Schritten ein $n$ zu finden, welches das Programm innerhalb eines Threshholds von 0,002 Sekunden an eine Laufzeit von eine Sekunde bringt. Das ist nötig, weil ich nicht tagelang warten möchte, bis mein Laptop jede Zahl von $1$ bis $n$ ausprobiert hat. Calculator implementieren die bereits vorgestellten Algorithmen, um Fibonacci zu berechnen.
+Exponentiation by Squaring has the advantage that the number of required operations is reduced from $O(n)$ in the dynamic algorithm to $O(log(n))$. However, since the final multiplication still requires $O(n^2)$ bit operations, the asymptotic runtime (for computers) remains the same.
 
-### Die Scheduler
-Ich habe 3 Scheduler implementiert. Der Erste, genannt "Graph Scheduler" inkrementiert n um eine vorgegebene STEP_SIZE, bis die 1-Sekunden-Marke erreicht ist. Der Zweite, genannt "Binary Scheduler", führt eine Art binäre Suche aus, um möglichst schnell das korrekte n zu finden. Das funktioniert schon überraschend gut, aber kann noch verbessert werden. Dafür ist der "Ratio Scheduler" da. Dies ist sein Code:
+## Implementation in Java
+In true OOP tradition, I created a `BaseScheduler` and `BaseCalculator` interface so that concrete implementations can be easily swapped. Schedulers are responsible for finding an $n$ that brings the program's runtime to one second within a threshold of 0.002 seconds in as few steps as possible. This is necessary because I did not want to wait indefinitely for my laptop to test every number from $1$ to $n$. Calculators implement the previously discussed algorithms to compute Fibonacci.
+
+### The Schedulers
+I implemented three schedulers. The first, called "Graph Scheduler," increments $n$ by a predefined `STEP_SIZE` until the one-second mark is reached. The second, called "Binary Scheduler," performs a kind of binary search to find the correct $n$ as quickly as possible. This works surprisingly well but can still be improved. That is where the "Ratio Scheduler" comes in. Here is its code:
 
 ```java
 public class RatioScheduler implements BaseScheduler {
@@ -86,22 +93,20 @@ public class RatioScheduler implements BaseScheduler {
 }
 ```
 
-Ratio Scheduler berechnet das Verhältnis zwischen gemessener Zeit und Zielzeit und leitet daraus ein Verhältnis, mit dem n multipliziert werden müsste ab. Außerdem bezieht Ratio Scheduler dabei einen Dämpfer mit ein, da es ansonsten für Laufzeiten nahe an einer Sekunde zu zu starken Oszillationen kam. 
+### The Calculators
+The code for the calculators is either too trivial or too long, and the algorithms have already been discussed. Therefore, I refer again to the [GitHub repository](https://github.com/chriscomputing/fib-java). I had to use `BigInteger` for the implementation since Java’s largest data type, `long`, overflows after the 93rd Fibonacci number. I first implemented the recursive and dynamic algorithms before turning to Fast Squaring. For the latter, I used the [Apache Commons Math Library](https://commons.apache.org/proper/commons-math/), which provides numerous matrix operations. Unfortunately, the library's matrices do not support `BigInteger`, so I had to use `BigFraction` instead, which led to an awkward conversion to `BigInteger`.
 
-### Die Calculator
-Der Code für die Calculator ist entweder zu langweilig oder zu lang, und die Algorithmen bereits diskutiert. Daher verweise ich an dieser Stelle nur erneut auf das [Github Repository](https://github.com/chriscomputing/fib-java).  
-Für die Implementation musste ich BigInteger verwenden, da Javas größter Datentyp, der long, bereits nach der 93sten Fibonacci Zahl überläuft. Ich habe zuerst den rekursiven und den dynamischen Algorithmus implementiert, bevor ich mich Fast Squaring zugewandt habe. Für Letzteres habe ich die [Apache Commons Math Library](https://commons.apache.org/proper/commons-math/) verwendet, welche zahlreiche Methoden für Matrizen bietet. Leider können die Matrizen der Library nicht mit BigIntegern umgehen, sodass ich für diese Implementation BigFraction aus der Commons Math Library verwenden musste, da der Rest meines Codes BigInteger erwartet. Daher beinhaltet der Code für Fast Squaring auch eine eher unschöne Umwandlug in BigInteger.
+## Results
+Now for the exciting part—how does Java compare to C? I used [Sheafification of G’s implementations](https://github.com/SheafificationOfG/Fibsonisheaf) for C. Here are the results:
 
-## Ergebnisse
-Damit zum spannenden Teil. Wie schlägt sich Java im Vergleich zu C? Für C verwende ich die [Implementationen von Sheafification of G](https://github.com/SheafificationOfG/Fibsonisheaf). Die folgenden Werte wurden ermittelt, indem ich mein Testprogramm auf meinem Laptop mit den jeweils verschiedenen Calculatorn ausgewählt ausgeführt habe. Das daraus gewonnene n habe ich dann einzeln erneut berechnen lassen und die dabei ermittelte Laufzeit für Java und C festgehalten. Dazu später mehr. Hier sind die Ergebnisse:
-
-| Algorithmus | n | Java | C |
+| Algorithm | n | Java | C |
 | ----------- | --- | ---- | - |
-| Rekursiv | 39 | 1.096616593s | 0.161663483s |
-| Dynamisch | 302.463 | 1.630596675s | 0.507222650s |
-| Fast Squaring | 2.743.397 | 1.816605545s | 1.511263398s |
+| Recursive | 39 | 1.096616593s | 0.161663483s |
+| Dynamic | 302,463 | 1.630596675s | 0.507222650s |
+| Fast Squaring | 2,743,397 | 1.816605545s | 1.511263398s |
 
-Es ist überraschend, wie groß der Unterschied zwischen dem dynamischen Algorithmus und Fast Squaring ist, obwohl beide Asympthotisch die gleiche Laufzeit haben. Das zeigt erneut, dass Laufzeitklassen lange nicht alles über einen Algorithmus aussagen. Weniger überraschend ist, dass C durchweg besser abschneidet als Java. Auffällig ist, dass keine Zeit für Java unter einer Sekunde ist. Wie kommt das? Wie oben bereits erwähnt, wurde $n$ mit Hilfe eines Schedulers in einer Serie von vielen (ca. 20 - 30) Fibonacci Berechnungen ermittelt. In dieser Serie hat mein Laptop $n$ tatsächlich innerhalb einer Sekunde berechnen können. Die hier aufgeführten Zeiten für Java und C wurden ermittelt, indem die Berechnung ein mal mit dem gegebenen $n$ ausgeführt wurde. Den Zeitunterschied erkläre ich vor allem durch predictive branching der CPU. Cache könnte auch eine Rolle gespielt haben. Ausgiebig recherchiert habe ich zu dem Phänomen allerdings nicht.
+It is surprising how much better Fast Squaring performs compared to the dynamic algorithm, despite having the same asymptotic runtime. This once again shows that runtime complexity does not tell the whole story about an algorithm. Unsurprisingly, C outperforms Java across the board.
 
-## Verbesserungsmöglichkeiten
-Natürlich gibt es sowohl im Versuchsaufbau, als auch in der Implementation der Algorithmen Verbesserungsmöglichkeiten. Zum Beispiel habe ich die Werte durch einmaliges Ausführen auf meinem Laptop ermittelt, ein hochgradig unwissenschaftliches vorgehen. Es ist auch nicht ideal, dass zwei Implementationen BigInteger und eine BigFraction verwendet. Ich habe nicht getestet ob Apaches BigFraction Implementation effizienter addiert als BigInteger, trotzdem wäre es sicherlich präziser, einen einheitlichen Datentyp zu verwenden. Streng genommen sind weder BigInteger noch BigFraction optimale Datentypen. Beide sind immutable, sodass für jede Berechnung neuer Speicherplatz für das Ergebnis allokiert werden muss. Das ist ein signifikanter Overhead, ohne den mit Sicherheit größere $n$ möglich wären. Da es möglich ist, für ein gegebenes $n$ zu berechnen, wie viel Speicherplatz $fib(n)$ maximal benötigen würde, wäre es am besten, zu Beginn des Algorithmus einmal die nötigen Variablen zu allokieren und dann in-place zu modifizieren. Ich habe Versuche genommen, das umzusetzen. Allerdings ist Java nicht für Manipulationen auf Byte-Level gemacht (zum Beispiel sind Bytes in Java signed, weil sie trotz ihres Namens als kleine Dezimalzahlen betrachtet werden), weswegen ich die Idee aufgrund von Zeitdruck durch Klausuren verworfen habe.
+## Possible Improvements
+There are many possible improvements, both in experimental setup and implementation. For example, using a uniform data type instead of a mix of `BigInteger` and `BigFraction` would make comparisons more precise. Furthermore, using a pre-allocated memory block for Fibonacci computations could eliminate significant overhead and allow for even larger $n$ values.
+
