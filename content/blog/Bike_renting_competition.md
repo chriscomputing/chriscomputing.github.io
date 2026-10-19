@@ -1,5 +1,5 @@
 +++
-title = "Predicting bikeshare demand using using machine learning"
+title = "Predicting bikeshare demand using machine learning"
 description = "XGBoost regression to predict dynamic demand for bikesharing"
 slug = "xgboost-bikeshare-predictions"
 tags = ["Machine Learning", "Python", "Competition"]
