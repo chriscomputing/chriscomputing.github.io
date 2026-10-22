@@ -34,7 +34,7 @@ enableRobotsTXT = true  # Für die coole SEO
 # Theme Language Setup
 [languages]
     [languages.de]
-    title = "Blog von chriscomputing"
+    title = "chriscomputing.com"
     label = "Deutsch 🇩🇪"
     locale = 'de-DE'
     contentDir = "content.de"
@@ -44,7 +44,7 @@ enableRobotsTXT = true  # Für die coole SEO
         privacyNotice = "[Datenschutzerklärung](https://blog.chriscomputing.de/datenschutz/)"
 
     [languages.en]
-    title = "Blog from chriscomputing"
+    title = "chriscomputing.com"
     label = "English 🇬🇧"
     locale = 'en-EN'
     contentDir = "content"
