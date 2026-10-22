@@ -39,7 +39,7 @@ enableRobotsTXT = true  # Für die coole SEO
     locale = 'de-DE'
     contentDir = "content.de"
     [languages.de.params]
-        madeWith = "Gemacht mit [Bear Cub](https://github.com/clente/hugo-bearcub)"
+        madeWith = "Gemacht mit meinem eigenen [Bear Cub fork](https://github.com/chriscomputing/hugo-bearcub)"
         dateFormat = "02.01.2006"
         privacyNotice = "[Datenschutzerklärung](https://blog.chriscomputing.de/datenschutz/)"
 
@@ -49,7 +49,7 @@ enableRobotsTXT = true  # Für die coole SEO
     locale = 'en-EN'
     contentDir = "content"
     [languages.en.params]
-        madeWith = "Made with [Bear Cub](https://github.com/clente/hugo-bearcub)"
+        madeWith = "Made with my custom [Bear Cub fork](https://github.com/chriscomputing/hugo-bearcub)"
         dateFormat = "2006-01-02"
         privacyNotice = "[Privacy Notice](https://blog.chriscomputing.de/en/privacynotice)"
 

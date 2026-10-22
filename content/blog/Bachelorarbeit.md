@@ -1,6 +1,7 @@
 +++
 title = "Transferability of benchmark results to real scientific applications"
 date = 2025-10-04
+# featured = true
 draft = false
 math = false
 slug = "how-good-are-benchmarks"

@@ -5,6 +5,7 @@ slug = "budget-homelab-debian-zfs-docker"
 tags = ["Homelab", "Linux", "ZFS", "Selfhosting", "Monitoring","Docker"]
 date = 2026-08-15
 draft = false
+# featured = true
 math = false
 toc_open = true
 +++
