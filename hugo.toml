@@ -58,6 +58,8 @@ enableRobotsTXT = true  # Für die coole SEO
     hideUntranslated = false
     math = false
     toc_open = true
+    # Render the blog index as image cards instead of a plain post list
+    cardList = true
 
     [params.author]
         name = "chriscomputing"
